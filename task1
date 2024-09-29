@@ -1,0 +1,43 @@
+import re
+
+# Common passwords list (a small sample; in a real-world scenario, you'd use a much larger list)
+common_passwords = ["123456", "password", "qwerty", "abc123", "password1"]
+
+def password_strength(password):
+    length_criteria = len(password) >= 12
+    lowercase_criteria = bool(re.search(r'[a-z]', password))
+    uppercase_criteria = bool(re.search(r'[A-Z]', password))
+    digit_criteria = bool(re.search(r'[0-9]', password))
+    special_char_criteria = bool(re.search(r'[!@#$%^&*(),.?":{}|<>]', password))
+    not_common = password.lower() not in common_passwords
+
+    # Calculate strength score
+    score = 0
+    if length_criteria:
+        score += 2
+    if lowercase_criteria:
+        score += 1
+    if uppercase_criteria:
+        score += 1
+    if digit_criteria:
+        score += 1
+    if special_char_criteria:
+        score += 1
+    if not_common:
+        score += 1
+
+    # Provide feedback based on score
+    if score <= 2:
+        feedback = "Weak: Your password is too short or lacks complexity. Consider adding more varied characters."
+    elif score <= 4:
+        feedback = "Moderate: Your password could be stronger. Try adding a mix of uppercase letters, numbers, and special characters."
+    else:
+        feedback = "Strong: Your password is secure."
+
+    return {"score": score, "feedback": feedback}
+
+# User input
+password = input("Enter your password: ")
+result = password_strength(password)
+print(f"Password Score: {result['score']}/7")
+print(f"Feedback: {result['feedback']}")
